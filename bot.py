@@ -3,7 +3,7 @@ import requests
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
 
-BOT_TOKEN ='7641748037:AAEO5DpbHpR25cgGwWssXbXvFLLY8amTbQQ'
+BOT_TOKEN ='8012370319:AAG8wXD_Klql7tO27s2zsZwHpEcCz_w76Xo'
 API_TOKEN = 'tgp_v1_Od-xBvumrybF5uEb5GkQCc0DFSHKhzJD-uDPJW6DjHM'
 
 
