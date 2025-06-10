@@ -36,15 +36,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message or not update.message.text:
         keyboard = [[InlineKeyboardButton("📩 تماس با توسعه‌دهنده", url="https://t.me/MNDEVV")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
-
-        await update.message.reply_text(
-            "❗ متأسفم، فعلاً فقط پیام‌های متنی قابل پردازش هستند.\n"
-            "برای فعال‌سازی پشتیبانی برای سایر پیام‌ها، لطفاً با توسعه‌دهنده تماس بگیرید.",
-            reply_markup=reply_markup
-        )
+        await update.message.reply_text("❗ فقط پیام‌های متنی قابل پردازش هستند.", reply_markup=reply_markup)
         return
 
     user_msg = update.message.text
+    await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
 
     headers = {
         "Authorization": f"Bearer {API_TOKEN}",
@@ -73,7 +69,10 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         reply = "⚠️ مشکلی در اتصال به هوش مصنوعی پیش آمد."
 
-    keyboard = [[InlineKeyboardButton("📩 تماس با توسعه‌دهنده", url="https://t.me/MNDEVV")]]
+    keyboard = [
+        [InlineKeyboardButton("📩 تماس با توسعه‌دهنده", url="https://t.me/MNDEVV")],
+        [InlineKeyboardButton("💡 راهنما", callback_data="help")]
+    ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     await update.message.reply_text(reply, reply_markup=reply_markup)
