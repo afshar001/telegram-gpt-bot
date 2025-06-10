@@ -53,7 +53,10 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     data = {
         "model": "meta-llama/Llama-3-8b-chat-hf",
-        "messages": [{"role": "user", "content": user_msg}],
+        "messages": [
+        {"role": "system", "content": "شما یک دستیار فارسی‌زبان هستید. فقط به زبان فارسی و با لحن مودبانه پاسخ بده."},
+        {"role": "user", "content": user_msg}
+    ],
         "temperature": 0.7,
         "top_p": 0.7,
         "max_tokens": 512
