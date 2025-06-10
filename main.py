@@ -1,10 +1,7 @@
 import requests
 import httpx
-from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
-from telegram.ext import CallbackQueryHandler
-import asyncio
-from telegram import Bot
+from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, Bot
+from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, CallbackQueryHandler, filters
 import re
 
 BOT_TOKEN = '8012370319:AAG8wXD_Klql7tO27s2zsZwHpEcCz_w76Xo'
@@ -37,11 +34,13 @@ mohammad_naderi_keywords = [
     "محمد نادری", "کیه محمد نادری", "چی میدونی درباره محمد نادری",
     "زندگی نامه محمد نادری", "بیوگرافی محمد نادری"
 ]
+
 def normalize_text(text: str) -> str:
     text = text.lower()
-    text = re.sub(r'[^\w\s]' , '' , text)
+    text = re.sub(r'[^\w\s]', '', text)
     text = text.strip()
     return text
+
 def keyword_in_text(keywords, text):
     normalized_keywords = [normalize_text(k) for k in keywords]
     return any(kw in text for kw in normalized_keywords)
@@ -57,8 +56,7 @@ async def reset(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
-    await query.answer()  # برای حذف چرخش لودینگ روی دکمه
-
+    await query.answer()
     if query.data == "help":
         await query.message.reply_text(HELP_MESSAGE)
 
@@ -72,7 +70,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_msg = update.message.text
     normalized = normalize_text(user_msg)
 
-    # پاسخ‌های کلیدواژه‌ای
     if keyword_in_text(developer_keywords, normalized):
         await update.message.reply_text(
             "من توسط محمد نادری توسعه داده شده‌ام 👨‍💻\n"
@@ -116,13 +113,9 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         async with httpx.AsyncClient() as client:
             response = await client.post("https://api.together.xyz/v1/chat/completions", headers=headers, json=data)
         res = response.json()
-
-        if "choices" in res:
-            reply = res["choices"][0]["message"]["content"]
-        else:
-            reply = "متاسفم، مشکلی در پاسخ‌دهی پیش آمد."
+        reply = res.get("choices", [{}])[0].get("message", {}).get("content", "پاسخی دریافت نشد.")
     except Exception as e:
-        print("Error in API request: ", e)
+        print("Error in API request:", e)
         reply = "⚠️ مشکلی در اتصال به هوش مصنوعی پیش آمد."
 
     keyboard = [
@@ -130,20 +123,15 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton("💡 راهنما", callback_data="help")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-
     await update.message.reply_text(reply, reply_markup=reply_markup)
 
 if __name__ == "__main__":
-    async def main():
-        bot = Bot(BOT_TOKEN)
-        await bot.delete_webhook()  # 🔥 حذف وب‌هوک برای جلوگیری از Conflict
+    app = Application.builder().token(BOT_TOKEN).build()
 
-        app = ApplicationBuilder().token(BOT_TOKEN).build()
-        app.add_handler(CommandHandler("start", start))
-        app.add_handler(CommandHandler("help", help_command))
-        app.add_handler(CommandHandler("reset", reset))
-        app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-        app.add_handler(CallbackQueryHandler(button_callback))
-        await app.run_polling()
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler("reset", reset))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    app.add_handler(CallbackQueryHandler(button_callback))
 
-    asyncio.run(main())
+    app.run_polling()

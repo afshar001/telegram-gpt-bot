@@ -1,0 +1,190 @@
+[
+    {
+        "label": "requests",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "requests",
+        "description": "requests",
+        "detail": "requests",
+        "documentation": {}
+    },
+    {
+        "label": "httpx",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "httpx",
+        "description": "httpx",
+        "detail": "httpx",
+        "documentation": {}
+    },
+    {
+        "label": "Update",
+        "importPath": "telegram",
+        "description": "telegram",
+        "isExtraImport": true,
+        "detail": "telegram",
+        "documentation": {}
+    },
+    {
+        "label": "InlineKeyboardMarkup",
+        "importPath": "telegram",
+        "description": "telegram",
+        "isExtraImport": true,
+        "detail": "telegram",
+        "documentation": {}
+    },
+    {
+        "label": "InlineKeyboardButton",
+        "importPath": "telegram",
+        "description": "telegram",
+        "isExtraImport": true,
+        "detail": "telegram",
+        "documentation": {}
+    },
+    {
+        "label": "Bot",
+        "importPath": "telegram",
+        "description": "telegram",
+        "isExtraImport": true,
+        "detail": "telegram",
+        "documentation": {}
+    },
+    {
+        "label": "Application",
+        "importPath": "telegram.ext",
+        "description": "telegram.ext",
+        "isExtraImport": true,
+        "detail": "telegram.ext",
+        "documentation": {}
+    },
+    {
+        "label": "CommandHandler",
+        "importPath": "telegram.ext",
+        "description": "telegram.ext",
+        "isExtraImport": true,
+        "detail": "telegram.ext",
+        "documentation": {}
+    },
+    {
+        "label": "MessageHandler",
+        "importPath": "telegram.ext",
+        "description": "telegram.ext",
+        "isExtraImport": true,
+        "detail": "telegram.ext",
+        "documentation": {}
+    },
+    {
+        "label": "ContextTypes",
+        "importPath": "telegram.ext",
+        "description": "telegram.ext",
+        "isExtraImport": true,
+        "detail": "telegram.ext",
+        "documentation": {}
+    },
+    {
+        "label": "CallbackQueryHandler",
+        "importPath": "telegram.ext",
+        "description": "telegram.ext",
+        "isExtraImport": true,
+        "detail": "telegram.ext",
+        "documentation": {}
+    },
+    {
+        "label": "filters",
+        "importPath": "telegram.ext",
+        "description": "telegram.ext",
+        "isExtraImport": true,
+        "detail": "telegram.ext",
+        "documentation": {}
+    },
+    {
+        "label": "re",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "re",
+        "description": "re",
+        "detail": "re",
+        "documentation": {}
+    },
+    {
+        "label": "normalize_text",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def normalize_text(text: str) -> str:\n    text = text.lower()\n    text = re.sub(r'[^\\w\\s]', '', text)\n    text = text.strip()\n    return text\ndef keyword_in_text(keywords, text):\n    normalized_keywords = [normalize_text(k) for k in keywords]\n    return any(kw in text for kw in normalized_keywords)\nasync def start(update: Update, context: ContextTypes.DEFAULT_TYPE):\n    await update.message.reply_text(WLCOME_MESSAGE)",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "keyword_in_text",
+        "kind": 2,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "def keyword_in_text(keywords, text):\n    normalized_keywords = [normalize_text(k) for k in keywords]\n    return any(kw in text for kw in normalized_keywords)\nasync def start(update: Update, context: ContextTypes.DEFAULT_TYPE):\n    await update.message.reply_text(WLCOME_MESSAGE)\nasync def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):\n    await update.message.reply_text(HELP_MESSAGE)\nasync def reset(update: Update, context: ContextTypes.DEFAULT_TYPE):\n    await update.message.reply_text(\"🔄 چت ریست شد. می‌تونی دوباره سوال بپرسی.\")\nasync def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "BOT_TOKEN",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "BOT_TOKEN = '8012370319:AAG8wXD_Klql7tO27s2zsZwHpEcCz_w76Xo'\nAPI_TOKEN = 'tgp_v1_Od-xBvumrybF5uEb5GkQCc0DFSHKhzJD-uDPJW6DjHM'\nWLCOME_MESSAGE = \"\"\"سلام! 🤖\nخوش اومدی !\nمن توسط محمد نادری توسعه یافتم تا بتونم بهت کمک کنم 😊\nلطفا سوالتو بپرس!\n\"\"\"\nHELP_MESSAGE = \"\"\"دستورات ربات:\n/start - شروع و خوش‌آمدگویی\n/help - نمایش راهنما",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "API_TOKEN",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "API_TOKEN = 'tgp_v1_Od-xBvumrybF5uEb5GkQCc0DFSHKhzJD-uDPJW6DjHM'\nWLCOME_MESSAGE = \"\"\"سلام! 🤖\nخوش اومدی !\nمن توسط محمد نادری توسعه یافتم تا بتونم بهت کمک کنم 😊\nلطفا سوالتو بپرس!\n\"\"\"\nHELP_MESSAGE = \"\"\"دستورات ربات:\n/start - شروع و خوش‌آمدگویی\n/help - نمایش راهنما\n/reset - ریست کردن چت",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "WLCOME_MESSAGE",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "WLCOME_MESSAGE = \"\"\"سلام! 🤖\nخوش اومدی !\nمن توسط محمد نادری توسعه یافتم تا بتونم بهت کمک کنم 😊\nلطفا سوالتو بپرس!\n\"\"\"\nHELP_MESSAGE = \"\"\"دستورات ربات:\n/start - شروع و خوش‌آمدگویی\n/help - نمایش راهنما\n/reset - ریست کردن چت\n\"\"\"",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "HELP_MESSAGE",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "HELP_MESSAGE = \"\"\"دستورات ربات:\n/start - شروع و خوش‌آمدگویی\n/help - نمایش راهنما\n/reset - ریست کردن چت\n\"\"\"\ndeveloper_keywords = [\n    \"توسعه دهنده\", \"سازنده\", \"ساخته\", \"کی ساختت\", \"کسی که ساخت\",\n    \"برنامه نویس\", \"ساخت\", \"developer\", \"ساخته شده\", \"ساخته شدی\"\n]\nbot_identity_keywords = [",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "developer_keywords",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "developer_keywords = [\n    \"توسعه دهنده\", \"سازنده\", \"ساخته\", \"کی ساختت\", \"کسی که ساخت\",\n    \"برنامه نویس\", \"ساخت\", \"developer\", \"ساخته شده\", \"ساخته شدی\"\n]\nbot_identity_keywords = [\n    \"تو کی هستی\", \"تو چی هستی\", \"چی هستی\", \"کی هستی\",\n    \"هدفت چیه\", \"برای چی هستی\", \"چطور ساخته شدی\", \"چه کاری می‌کنی\"\n]\nmohammad_naderi_keywords = [\n    \"محمد نادری\", \"کیه محمد نادری\", \"چی میدونی درباره محمد نادری\",",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "bot_identity_keywords",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "bot_identity_keywords = [\n    \"تو کی هستی\", \"تو چی هستی\", \"چی هستی\", \"کی هستی\",\n    \"هدفت چیه\", \"برای چی هستی\", \"چطور ساخته شدی\", \"چه کاری می‌کنی\"\n]\nmohammad_naderi_keywords = [\n    \"محمد نادری\", \"کیه محمد نادری\", \"چی میدونی درباره محمد نادری\",\n    \"زندگی نامه محمد نادری\", \"بیوگرافی محمد نادری\"\n]\ndef normalize_text(text: str) -> str:\n    text = text.lower()",
+        "detail": "main",
+        "documentation": {}
+    },
+    {
+        "label": "mohammad_naderi_keywords",
+        "kind": 5,
+        "importPath": "main",
+        "description": "main",
+        "peekOfCode": "mohammad_naderi_keywords = [\n    \"محمد نادری\", \"کیه محمد نادری\", \"چی میدونی درباره محمد نادری\",\n    \"زندگی نامه محمد نادری\", \"بیوگرافی محمد نادری\"\n]\ndef normalize_text(text: str) -> str:\n    text = text.lower()\n    text = re.sub(r'[^\\w\\s]', '', text)\n    text = text.strip()\n    return text\ndef keyword_in_text(keywords, text):",
+        "detail": "main",
+        "documentation": {}
+    }
+]
