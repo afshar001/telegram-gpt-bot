@@ -12,7 +12,8 @@ from database import connect_db, init_db, save_message
 # بارگذاری توکن‌ها و آدرس Railway از متغیرهای محیطی
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 API_TOKEN = os.getenv("API_TOKEN")
-APP_URL = os.getenv("APP_URL")  # مثلاً: https://your-app-name.up.railway.app
+APP_URL = os.getenv("APP_URL")
+WEBHOOK_URL = f"{APP_URL}/webhook/{BOT_TOKEN}" # مثلاً: https://your-app-name.up.railway.app
 
 WLCOME_MESSAGE = """سلام! 🤖
 خوش اومدی !
@@ -156,7 +157,8 @@ async def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     # تنظیم Webhook
-    await app.bot.set_webhook(f"{APP_URL}/webhook/{BOT_TOKEN}")
+    await app.bot.set_webhook(WEBHOOK_URL)
+
     await app.run_webhook(
         listen="0.0.0.0",
         port=int(os.environ.get("PORT", 8443)),
