@@ -159,13 +159,13 @@ async def main():
 
     # تنظیم Webhook
     
-    await app.bot.set_webhook(WEBHOOK_URL)
+    await app.bot.set_webhook(f"{APP_URL}/{BOT_TOKEN}")
 
     await app.run_webhook(
-        listen="0.0.0.0",
-        port=int(os.environ.get("PORT", 8443)),
-        webhook_path=WEBHOOK_PATH,
-    )
+    listen="0.0.0.0",
+    port=int(os.environ.get("PORT", 8443)),
+    url_path=f"{BOT_TOKEN}"
+)
 
 
 if __name__ == "__main__":
