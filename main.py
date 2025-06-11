@@ -10,9 +10,9 @@ from telegram.ext import (
 from database import connect_db, init_db, save_message
 
 # بارگذاری توکن‌ها و آدرس Railway از متغیرهای محیطی
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-API_TOKEN = os.getenv("API_TOKEN")
-APP_URL = os.getenv("APP_URL")
+BOT_TOKEN = '8012370319:AAG8wXD_Klql7tO27s2zsZwHpEcCz_w76Xo'
+API_TOKEN = 'tgp_v1_Od-xBvumrybF5uEb5GkQCc0DFSHKhzJD-uDPJW6DjHM'
+APP_URL = 'https://web-production-ffc6d.up.railway.app'
 WEBHOOK_URL = f"{APP_URL}/webhook/{BOT_TOKEN}" # مثلاً: https://your-app-name.up.railway.app
 
 WLCOME_MESSAGE = """سلام! 🤖
