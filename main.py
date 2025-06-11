@@ -82,6 +82,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
     )
     await database.disconnect()
+    await app.bot.set_webhook(f"{API_TOKEN}/webhook/{BOT_TOKEN}")
+    await app.run_webhook(
+        listen="0.0.0.0",
+        port=int(os.environ.get("PORT", 8443)),
+        webhook_url=f"{API_TOKEN}/webhook/{BOT_TOKEN}",
+    )
 
     if keyword_in_text(developer_keywords, normalized):
         await update.message.reply_text(
