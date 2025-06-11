@@ -1,20 +1,28 @@
-import databases
-import sqlalchemy
+# database.py
 
-DATABASE_URL = "sqlite:///./messages.db"
+from databases import Database
 
-database = databases.Database(DATABASE_URL)
-metadata = sqlalchemy.MetaData()
+DATABASE_URL = "sqlite:///./test.db"  # برای حالت موقتی
+database = Database(DATABASE_URL)
 
-messages = sqlalchemy.Table(
-    "messages",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("user_id", sqlalchemy.String),
-    sqlalchemy.Column("username", sqlalchemy.String, nullable=True),
-    sqlalchemy.Column("text", sqlalchemy.String),
-    sqlalchemy.Column("timestamp", sqlalchemy.DateTime, default=sqlalchemy.func.now()),
-)
+async def connect_db():
+    await database.connect()
 
-engine = sqlalchemy.create_engine(DATABASE_URL)
-metadata.create_all(engine)
+async def disconnect_db():
+    await database.disconnect()
+
+async def save_message(user_id: int, message: str):
+    query = "INSERT INTO messages (user_id, message) VALUES (:user_id, :message)"
+    values = {"user_id": user_id, "message": message}
+    await database.execute(query=query, values=values)
+
+async def init_db():
+    # ساخت جدول در صورت نبود
+    query = """
+    CREATE TABLE IF NOT EXISTS messages (
+        id INTEGER PRIMARY KEY,
+        user_id INTEGER,
+        message TEXT
+    )
+    """
+    await database.execute(query)
