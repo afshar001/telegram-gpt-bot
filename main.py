@@ -157,22 +157,9 @@ async def main():
     app.add_handler(CallbackQueryHandler(button_callback))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
-    # فقط اگر webhook نیاز به تنظیم دارد
-    webhook_info = await app.bot.get_webhook_info()
-    if webhook_info.url != WEBHOOK_URL:
-        await app.bot.set_webhook(url=WEBHOOK_URL)
-
-    # اجرای Webhook
-    await app.run_webhook(
-        listen="0.0.0.0",
-        port=int(os.environ.get("PORT", 8443)),
-        webhook_url=WEBHOOK_URL
-    )
-
+    await app.run_polling()
 
 if __name__ == "__main__":
     import asyncio
+    asyncio.run(main())
 
-    # به جای asyncio.run از این روش استفاده می‌کنیم
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
