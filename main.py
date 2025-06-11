@@ -3,7 +3,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, Con
 import re
 import httpx
 import asyncio
-from database import init_db, save_message
+from database import connect_db, init_db, save_message
 
 BOT_TOKEN = '8012370319:AAG8wXD_Klql7tO27s2zsZwHpEcCz_w76Xo'
 API_TOKEN = 'tgp_v1_Od-xBvumrybF5uEb5GkQCc0DFSHKhzJD-uDPJW6DjHM'
@@ -139,6 +139,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(reply, reply_markup=reply_markup)
 
 async def main():
+    await connect_db()
     await init_db()
     app = ApplicationBuilder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
@@ -146,15 +147,23 @@ async def main():
     app.add_handler(CommandHandler("reset", reset))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(CallbackQueryHandler(button_callback))
-    await app.run_polling()
+    print("Bot is polling...")
+    await app.initialize()
+    await app.start()
+    await app.updater.start_polling()
+    # نه run_polling
+
+    # اجازه بده بات کار کنه
+    await asyncio.Event().wait()
 
 if __name__ == "__main__":
     try:
-        loop = asyncio.get_event_loop()
-        loop.run_until_complete(main())
+        asyncio.run(main())
     except RuntimeError as e:
-        # اگر loop در حال اجرا بود، مستقیم صدا بزن
-        if "already running" in str(e):
-            asyncio.ensure_future(main())
+        if "event loop is already running" in str(e):
+            print("Async loop already running. Using alternative approach.")
+            import nest_asyncio
+            nest_asyncio.apply()
+            asyncio.get_event_loop().create_task(main())
         else:
             raise
