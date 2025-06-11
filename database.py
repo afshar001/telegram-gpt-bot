@@ -1,8 +1,6 @@
-# database.py
-
 from databases import Database
 
-DATABASE_URL = "sqlite:///./test.db"  # برای حالت موقتی
+DATABASE_URL = "sqlite:///./test.db"  # حالت موقتی
 database = Database(DATABASE_URL)
 
 async def connect_db():
@@ -17,7 +15,7 @@ async def save_message(user_id: int, message: str):
     await database.execute(query=query, values=values)
 
 async def init_db():
-    # ساخت جدول در صورت نبود
+    await connect_db()  # اتصال دیتابیس قبل از ایجاد جدول
     query = """
     CREATE TABLE IF NOT EXISTS messages (
         id INTEGER PRIMARY KEY,
