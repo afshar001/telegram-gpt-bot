@@ -1,20 +1,11 @@
-import os
-import re
+import requests
 import httpx
-import asyncio
-from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
-from telegram.ext import (
-    ApplicationBuilder, CommandHandler, MessageHandler,
-    ContextTypes, CallbackQueryHandler, filters
-)
-from database import connect_db, init_db, save_message
+from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, Bot
+from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, CallbackQueryHandler, filters
+import re
 
-# بارگذاری توکن‌ها و آدرس Railway از متغیرهای محیطی
 BOT_TOKEN = '8012370319:AAG8wXD_Klql7tO27s2zsZwHpEcCz_w76Xo'
 API_TOKEN = 'tgp_v1_Od-xBvumrybF5uEb5GkQCc0DFSHKhzJD-uDPJW6DjHM'
-APP_URL = 'https://web-production-ffc6d.up.railway.app'
-WEBHOOK_PATH = f"/webhook/{BOT_TOKEN}"
-WEBHOOK_URL = f"{APP_URL}{WEBHOOK_PATH}"
 
 WLCOME_MESSAGE = """سلام! 🤖
 خوش اومدی !
@@ -45,36 +36,30 @@ mohammad_naderi_keywords = [
     "زندگی نامه محمد نادری", "بیوگرافی محمد نادری"
 ]
 
-
 def normalize_text(text: str) -> str:
     text = text.lower()
     text = re.sub(r'[^\w\s]', '', text)
-    return text.strip()
-
+    text = text.strip()
+    return text
 
 def keyword_in_text(keywords, text):
     normalized_keywords = [normalize_text(k) for k in keywords]
     return any(kw in text for kw in normalized_keywords)
 
-
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(WLCOME_MESSAGE)
-
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(HELP_MESSAGE)
 
-
 async def reset(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("🔄 چت ریست شد. می‌تونی دوباره سوال بپرسی.")
-
 
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
     if query.data == "help":
         await query.message.reply_text(HELP_MESSAGE)
-
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message or not update.message.text:
@@ -85,9 +70,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     user_msg = update.message.text
     normalized = normalize_text(user_msg)
-
-    # ذخیره پیام
-    await save_message(update.message.from_user.id, update.message.from_user.username, user_msg)
 
     if keyword_in_text(developer_keywords, normalized):
         await update.message.reply_text(
@@ -134,7 +116,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         res = response.json()
         reply = res.get("choices", [{}])[0].get("message", {}).get("content", "پاسخی دریافت نشد.")
     except Exception as e:
-        print("❌ Error in API request:", e)
+        print("Error in API request:", e)
         reply = "⚠️ مشکلی در اتصال به هوش مصنوعی پیش آمد."
 
     keyboard = [
@@ -144,22 +126,13 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(reply, reply_markup=reply_markup)
 
-
-async def main():
-    await connect_db()
-    await init_db()
-
-    app = ApplicationBuilder().token(BOT_TOKEN).build()
+if __name__ == "__main__":
+    app = Application.builder().token(BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CommandHandler("reset", reset))
-    app.add_handler(CallbackQueryHandler(button_callback))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    app.add_handler(CallbackQueryHandler(button_callback))
 
-    await app.run_polling()
-
-if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
-
+    app.run_polling()
