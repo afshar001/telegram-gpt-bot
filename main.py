@@ -13,7 +13,8 @@ from database import connect_db, init_db, save_message
 BOT_TOKEN = '8012370319:AAG8wXD_Klql7tO27s2zsZwHpEcCz_w76Xo'
 API_TOKEN = 'tgp_v1_Od-xBvumrybF5uEb5GkQCc0DFSHKhzJD-uDPJW6DjHM'
 APP_URL = 'https://web-production-ffc6d.up.railway.app'
-WEBHOOK_URL = f"{APP_URL}/webhook/{BOT_TOKEN}" # مثلاً: https://your-app-name.up.railway.app
+WEBHOOK_PATH = f"/webhook/{BOT_TOKEN}"
+WEBHOOK_URL = f"{APP_URL}{WEBHOOK_PATH}"
 
 WLCOME_MESSAGE = """سلام! 🤖
 خوش اومدی !
@@ -157,22 +158,15 @@ async def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     # تنظیم Webhook
+    
     await app.bot.set_webhook(WEBHOOK_URL)
 
     await app.run_webhook(
         listen="0.0.0.0",
         port=int(os.environ.get("PORT", 8443)),
-        webhook_path=f"/webhook/{BOT_TOKEN}",
+        webhook_path=WEBHOOK_PATH,
     )
 
 
 if __name__ == "__main__":
-    try:
-        asyncio.run(main())
-    except RuntimeError as e:
-        if "event loop is already running" in str(e):
-            import nest_asyncio
-            nest_asyncio.apply()
-            asyncio.get_event_loop().create_task(main())
-        else:
-            raise
+    asyncio.run(main())
