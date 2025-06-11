@@ -157,15 +157,16 @@ async def main():
     app.add_handler(CallbackQueryHandler(button_callback))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
-    # 🔒 تنظیم webhook
-    await app.bot.set_webhook(f"{APP_URL}/{BOT_TOKEN}")
+    # ✅ فقط اگر webhook درست ست نشده، دوباره set کنیم
+    webhook_info = await app.bot.get_webhook_info()
+    if webhook_info.url != WEBHOOK_URL:
+        await app.bot.set_webhook(WEBHOOK_URL)
 
-    # 🚀 اجرای Webhook با url_path (نه webhook_path)
+    # ✅ استفاده درست از run_webhook
     await app.run_webhook(
         listen="0.0.0.0",
         port=int(os.environ.get("PORT", 8443)),
-        url_path=f"{BOT_TOKEN}",
-        webhook_url=f"{APP_URL}/{BOT_TOKEN}"
+        path=WEBHOOK_PATH  # اینجا درست است
     )
 
 
