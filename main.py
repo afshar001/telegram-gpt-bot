@@ -1,8 +1,9 @@
-import requests
-import httpx
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton, Bot
 from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, CallbackQueryHandler, filters
 import re
+import httpx
+import asyncio
+from database import init_db, save_message
 
 BOT_TOKEN = '8012370319:AAG8wXD_Klql7tO27s2zsZwHpEcCz_w76Xo'
 API_TOKEN = 'tgp_v1_Od-xBvumrybF5uEb5GkQCc0DFSHKhzJD-uDPJW6DjHM'
@@ -71,6 +72,17 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_msg = update.message.text
     normalized = normalize_text(user_msg)
 
+    #ذخیره پیام در دیتا بیس
+    await database.connect()
+    await database.execute(
+        messages.insert().values(
+            user_id=str(update.message.from_user.id),
+            username=update.message.from_user.username,
+            text=user_msg,
+        )
+    )
+    await database.disconnect()
+
     if keyword_in_text(developer_keywords, normalized):
         await update.message.reply_text(
             "من توسط محمد نادری توسعه داده شده‌ام 👨‍💻\n"
@@ -126,13 +138,15 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(reply, reply_markup=reply_markup)
 
-if __name__ == "__main__":
-    app = Application.builder().token(BOT_TOKEN).build()
-
+async def main():
+    await init_db()
+    app = ApplicationBuilder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CommandHandler("reset", reset))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(CallbackQueryHandler(button_callback))
+    await app.run_polling()
 
-    app.run_polling()
+if __name__ == "__main__":
+    asyncio.run(main())

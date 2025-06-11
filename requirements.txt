@@ -1,2 +1,5 @@
 python-telegram-bot==20.8
-requests
+httpx==0.26.0
+fastapi==0.100.0
+uvicorn==0.23.1
+databases[sqlite]==0.7.4
